@@ -6,13 +6,42 @@
  * @param array $jugadores Array con los nombres de los jugadores
  * @return array Array asociativo con los nombres de los jugadores y sus cartas
  */
-function repartirCartas($jugadores){
+function repartirCartas($jugadores)
+{
     // mazo completo con cartas numeradas y figuras
     $mazo = [
-        '1C1', '1C2', '1D1', '1D2', '1P1', '1P2', '1T1', '1T2',
-        'JC1', 'JC2', 'JD1', 'JD2', 'JP1', 'JP2', 'JT1', 'JT2',
-        'KC1', 'KC2', 'KD1', 'KD2', 'KP1', 'KP2', 'KT1', 'KT2',
-        'QC1', 'QC2', 'QD1', 'QD2', 'QP1', 'QP2', 'QT1', 'QT2'
+        '1C1',
+        '1C2',
+        '1D1',
+        '1D2',
+        '1P1',
+        '1P2',
+        '1T1',
+        '1T2',
+        'JC1',
+        'JC2',
+        'JD1',
+        'JD2',
+        'JP1',
+        'JP2',
+        'JT1',
+        'JT2',
+        'KC1',
+        'KC2',
+        'KD1',
+        'KD2',
+        'KP1',
+        'KP2',
+        'KT1',
+        'KT2',
+        'QC1',
+        'QC2',
+        'QD1',
+        'QD2',
+        'QP1',
+        'QP2',
+        'QT1',
+        'QT2'
     ];
 
     shuffle($mazo); // barajar el mazo
@@ -39,7 +68,8 @@ function repartirCartas($jugadores){
  * @param array $cartasJugadores Array con las cartas de cada jugador
  * @return array Array asociativo con la puntuación y tipo de mano de cada jugador
  */
-function evaluarMano($cartasJugadores){
+function evaluarMano($cartasJugadores)
+{
     $resultado = [];
 
     foreach ($cartasJugadores as $nombre => $cartas) {
@@ -63,18 +93,19 @@ function evaluarMano($cartasJugadores){
  * @param array $cartas Array de valores de cartas
  * @return array Array con nombre de la jugada y su rango numérico
  */
-function evaluarCartas($cartas){
+function evaluarCartas($cartas)
+{
     $conteo = array_count_values($cartas); // contar cuántas veces aparece cada valor
     $pares = 0;
     $trio = false;
     $poker = false;
 
     foreach ($conteo as $cantidad) {
-        if ($cantidad == 2) 
+        if ($cantidad == 2)
             $pares++;
-        if ($cantidad == 3) 
+        if ($cantidad == 3)
             $trio = true;
-        if ($cantidad == 4) 
+        if ($cantidad == 4)
             $poker = true;
     }
 
@@ -93,13 +124,18 @@ function evaluarCartas($cartas){
  * @param int $tipoJugada Rango de la jugada (0-4)
  * @return float Premio correspondiente
  */
-function calcularPremio($bote, $tipoJugada) {
-    return match ($tipoJugada) {
-        4 => $bote,        // Poker gana todo
-        3 => $bote * 0.7,  // Trío gana 70%
-        2 => $bote * 0.5,  // Doble pareja gana 50%
-        default => 0
-    };
+function calcularPremio($bote, $tipoJugada)
+{
+    switch ($tipoJugada) {
+        case 4:
+            return $bote;        // Poker gana todo
+        case 3:
+            return $bote * 0.7;  // Trío gana 70%
+        case 2:
+            return $bote * 0.5;  // Doble pareja gana 50%
+        default:
+            return 0;
+    }
 }
 
 //**************************************************************************************************************************************************
@@ -109,25 +145,26 @@ function calcularPremio($bote, $tipoJugada) {
  * @param array $puntuacionJugadores Array con las puntuaciones de los jugadores
  * @return array Primer elemento: array de ganadores, Segundo elemento: rango máximo
  */
-function obtenerGanadores($puntuacionJugadores){
+function obtenerGanadores($puntuacionJugadores)
+{
     $maxRango = 0;
     $ganadores = [];
-    
+
     // Encontrar el rango máximo
     foreach ($puntuacionJugadores as $jugador => $puntuacion) {
         if ($puntuacion[1] > $maxRango) { // [1] representa el rango del jugador. (0,1,2,3,4)
             $maxRango = $puntuacion[1];
         }
     }
-    
+
     // Recoger todos los jugadores que tienen ese rango máximo
     foreach ($puntuacionJugadores as $jugador => $puntuacion) {
         if ($puntuacion[1] == $maxRango) {
             $ganadores[] = $jugador;
         }
     }
-    
-    return [$ganadores,$maxRango];
+
+    return [$ganadores, $maxRango];
 }
 
 //**************************************************************************************************************************************************
@@ -138,7 +175,8 @@ function obtenerGanadores($puntuacionJugadores){
  * @param array $puntuacionJugadores Array con la puntuación de cada jugador
  * @param float $bote Bote total del juego
  */
-function mostrar($cartasJugadores, $puntuacionJugadores, $bote) {
+function mostrar($cartasJugadores, $puntuacionJugadores, $bote)
+{
     echo "<h2>Resultados del Juego</h2>";
     echo "<table border='1' cellpadding='5' cellspacing='0'>";
     echo "<tr><th>Jugador</th><th>Cartas</th><th>Puntuación</th></tr>";
@@ -181,8 +219,7 @@ function mostrar($cartasJugadores, $puntuacionJugadores, $bote) {
  * @param string $dato Dato a limpiar
  * @return string Dato limpio
  */
-function limpiar($dato) {
+function limpiar($dato)
+{
     return htmlspecialchars(stripslashes(trim($dato)));
 }
-
-?>
